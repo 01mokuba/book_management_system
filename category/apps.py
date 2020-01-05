@@ -1,10 +1,10 @@
 from django.apps import AppConfig
 
 
-class AppConfig(AppConfig):
+class CategoryConfig(AppConfig):
     """
     アプリケーション構成クラス
     管理画面での表示名を指定する
     """
-    name = 'app'
-    verbose_name = '小園家蔵書管理システム'
+    name = 'category'
+    verbose_name = 'カテゴリ管理'

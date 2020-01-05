@@ -1,9 +1,10 @@
 from django.db import models
 
 from users.models import User
+from category.models import Category
 
 
-class Item(models.Model):
+class Book(models.Model):
     """
     データ定義クラス
       各フィールドを定義する
@@ -12,93 +13,85 @@ class Item(models.Model):
     https://docs.djangoproject.com/ja/2.1/ref/models/fields/
     """
 
-    # サンプル項目1 文字列
-    sample_1 = models.CharField(
-        verbose_name='サンプル項目1 文字列',
+    # 本の名前 文字列
+    book_name = models.CharField(
+        verbose_name='本の名前',
         max_length=20,
         blank=True,
         null=True,
     )
 
-    # サンプル項目2 メモ
-    sample_2 = models.TextField(
-        verbose_name='サンプル項目2 メモ',
+    # 著者 文字列
+    author_name = models.CharField(
+        verbose_name='著者',
+        max_length=20,
         blank=True,
         null=True,
     )
 
-    # サンプル項目3 整数
-    sample_3 = models.IntegerField(
-        verbose_name='サンプル項目3 整数',
+    # ステータス 選択肢（固定）
+    read_status_choice = (
+        (1, '読んだけどまた読みたい'),
+        (2, '読んだ'),
+        (3, '読んでない'),
+    )
+    read_status = models.IntegerField(
+        verbose_name='ステータス',
+        choices=read_status_choice,
         blank=True,
         null=True,
     )
 
-    # サンプル項目4 浮動小数点
-    sample_4 = models.FloatField(
-        verbose_name='サンプル項目4 浮動小数点',
+    # 読みたい理由 文字列
+    read_reason = models.CharField(
+        verbose_name='読みたい理由',
+        max_length=20,
         blank=True,
         null=True,
     )
 
-    # サンプル項目5 固定小数点
-    sample_5 = models.DecimalField(
-        verbose_name='サンプル項目5 固定小数点',
-        max_digits=5,
-        decimal_places=2,
+    # 関心 ブール値
+    is_wonder = models.BooleanField(
+        verbose_name='関心が高い',
+    )
+
+    # カテゴリ 選択肢（マスタ連動）
+    category = models.ForeignKey(
+        Category,
+        verbose_name='カテゴリ',
         blank=True,
         null=True,
-    )
-
-    # サンプル項目6 ブール値
-    sample_6 = models.BooleanField(
-        verbose_name='サンプル項目6 ブール値',
-    )
-
-    # サンプル項目7 日付
-    sample_7 = models.DateField(
-        verbose_name='サンプル項目7 日付',
-        blank=True,
-        null=True,
-    )
-
-    # サンプル項目8 日時
-    sample_8 = models.DateTimeField(
-        verbose_name='サンプル項目8 日時',
-        blank=True,
-        null=True,
-    )
-
-    # サンプル項目9 選択肢（固定）
-    sample_9_choice = (
-        (1, '選択１'),
-        (2, '選択２'),
-        (3, '選択３'),
-    )
-
-    sample_9 = models.IntegerField(
-        verbose_name='サンプル項目9_選択肢（固定）',
-        choices=sample_9_choice,
-        blank=True,
-        null=True,
-    )
-
-    # サンプル項目9 選択肢（マスタ連動）
-    sample_10 = models.ForeignKey(
-        User,
-        verbose_name='サンプル項目10_選択肢（マスタ連動）',
-        blank=True,
-        null=True,
-        related_name='sample_10',
+        related_name='category',
         on_delete=models.SET_NULL,
+    )
+
+    # 読み始め 日付
+    start_date = models.DateField(
+        verbose_name='読み始め',
+        blank=True,
+        null=True,
+    )
+
+    # 読み終わり 日付
+    end_date = models.DateField(
+        verbose_name='読み終わり',
+        blank=True,
+        null=True,
+    )
+
+    # 書評 メモ
+    review = models.TextField(
+        verbose_name='書評',
+        blank=True,
+        null=True,
     )
 
     # 以下、管理項目
 
-    # 作成者(ユーザー)
+    # 登録ユーザー
     created_by = models.ForeignKey(
         User,
-        verbose_name='作成者',
+        verbose_name='登録ユーザー',
         blank=True,
         null=True,
         related_name='CreatedBy',
@@ -106,18 +99,18 @@ class Item(models.Model):
         editable=False,
     )
 
-    # 作成時間
+    # 登録時間
     created_at = models.DateTimeField(
-        verbose_name='作成時間',
+        verbose_name='登録時間',
         blank=True,
         null=True,
         editable=False,
     )
 
-    # 更新者(ユーザー)
+    # 最終更新ユーザー
     updated_by = models.ForeignKey(
         User,
-        verbose_name='更新者',
+        verbose_name='最終更新ユーザー',
         blank=True,
         null=True,
         related_name='UpdatedBy',
@@ -125,9 +118,9 @@ class Item(models.Model):
         editable=False,
     )
 
-    # 更新時間
+    # 最終更新時間
     updated_at = models.DateTimeField(
-        verbose_name='更新時間',
+        verbose_name='最終更新時間',
         blank=True,
         null=True,
         editable=False,
@@ -137,11 +130,11 @@ class Item(models.Model):
         """
         リストボックスや管理画面での表示
         """
-        return self.sample_1
+        return self.book_name
 
     class Meta:
         """
         管理画面でのタイトル表示
         """
-        verbose_name = 'サンプル'
-        verbose_name_plural = 'サンプル'
+        verbose_name = '小園家蔵書トラン'
+        verbose_name_plural = '小園家蔵書トラン'

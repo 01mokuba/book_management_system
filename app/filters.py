@@ -1,7 +1,7 @@
 import django_filters
 from django.db import models
 
-from .models import Item
+from .models import Book
 
 
 class OrderingFilter(django_filters.filters.OrderingFilter):
@@ -9,7 +9,7 @@ class OrderingFilter(django_filters.filters.OrderingFilter):
     descending_fmt = '%s （降順）'
 
 
-class ItemFilterSet(django_filters.FilterSet):
+class BookFilterSet(django_filters.FilterSet):
     """
      django-filter 構成クラス
     https://django-filter.readthedocs.io/en/latest/ref/filterset.html
@@ -30,7 +30,7 @@ class ItemFilterSet(django_filters.FilterSet):
     )
 
     class Meta:
-        model = Item
+        model = Book
         # 一部フィールドを除きモデルクラスの定義を全て引用する
         exclude = ['created_at', 'updated_by', 'updated_at', ]
         # 文字列検索のデフォルトを部分一致に変更

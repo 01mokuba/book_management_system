@@ -1,9 +1,9 @@
 from django import forms
 
-from .models import Item
+from .models import Book
 
 
-class ItemForm(forms.ModelForm):
+class BookForm(forms.ModelForm):
     """
     モデルフォーム構成クラス
     ・公式 モデルからフォームを作成する
@@ -11,7 +11,7 @@ class ItemForm(forms.ModelForm):
     """
 
     class Meta:
-        model = Item
+        model = Book
         fields = '__all__'
 
         # 以下のフィールド以外が入力フォームに表示される

@@ -6,9 +6,9 @@ from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django_filters.views import FilterView
 
-from .filters import ItemFilterSet
-from .forms import ItemForm
-from .models import Item
+from .filters import BookFilterSet
+from .forms import BookForm
+from .models import Book
 
 
 # 未ログインのユーザーにアクセスを許可する場合は、LoginRequiredMixinを継承から外してください。
@@ -16,7 +16,7 @@ from .models import Item
 # LoginRequiredMixin：未ログインのユーザーをログイン画面に誘導するMixin
 # 参考：https://docs.djangoproject.com/ja/2.1/topics/auth/default/#the-loginrequired-mixin
 
-class ItemFilterView(LoginRequiredMixin, FilterView):
+class BookFilterView(LoginRequiredMixin, FilterView):
     """
     ビュー：一覧表示画面
 
@@ -24,10 +24,10 @@ class ItemFilterView(LoginRequiredMixin, FilterView):
     ・django-filter 一覧画面(ListView)に検索機能を追加
     https://django-filter.readthedocs.io/en/master/
     """
-    model = Item
+    model = Book
 
     # django-filter 設定
-    filterset_class = ItemFilterSet
+    filterset_class = BookFilterSet
     # django-filter ver2.0対応 クエリ未設定時に全件表示する設定
     strict = False
 
@@ -57,7 +57,7 @@ class ItemFilterView(LoginRequiredMixin, FilterView):
         ソート順・デフォルトの絞り込みを指定
         """
         # デフォルトの並び順として、登録時間（降順）をセットする。
-        return Item.objects.all().order_by('-created_at')
+        return Book.objects.all().order_by('-created_at')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         """
@@ -68,11 +68,11 @@ class ItemFilterView(LoginRequiredMixin, FilterView):
         return super().get_context_data(object_list=object_list, **kwargs)
 
 
-class ItemDetailView(LoginRequiredMixin, DetailView):
+class BookDetailView(LoginRequiredMixin, DetailView):
     """
     ビュー：詳細画面
     """
-    model = Item
+    model = Book
 
     def get_context_data(self, **kwargs):
         """
@@ -83,60 +83,60 @@ class ItemDetailView(LoginRequiredMixin, DetailView):
         return super().get_context_data(**kwargs)
 
 
-class ItemCreateView(LoginRequiredMixin, CreateView):
+class BookCreateView(LoginRequiredMixin, CreateView):
     """
     ビュー：登録画面
     """
-    model = Item
-    form_class = ItemForm
+    model = Book
+    form_class = BookForm
     success_url = reverse_lazy('index')
 
     def form_valid(self, form):
         """
         登録処理
         """
-        item = form.save(commit=False)
-        item.created_by = self.request.user
-        item.created_at = timezone.now()
-        item.updated_by = self.request.user
-        item.updated_at = timezone.now()
-        item.save()
+        Book = form.save(commit=False)
+        Book.created_by = self.request.user
+        Book.created_at = timezone.now()
+        Book.updated_by = self.request.user
+        Book.updated_at = timezone.now()
+        Book.save()
 
         return HttpResponseRedirect(self.success_url)
 
 
-class ItemUpdateView(LoginRequiredMixin, UpdateView):
+class BookUpdateView(LoginRequiredMixin, UpdateView):
     """
     ビュー：更新画面
     """
-    model = Item
-    form_class = ItemForm
+    model = Book
+    form_class = BookForm
     success_url = reverse_lazy('index')
 
     def form_valid(self, form):
         """
         更新処理
         """
-        item = form.save(commit=False)
-        item.updated_by = self.request.user
-        item.updated_at = timezone.now()
-        item.save()
+        Book = form.save(commit=False)
+        Book.updated_by = self.request.user
+        Book.updated_at = timezone.now()
+        Book.save()
 
         return HttpResponseRedirect(self.success_url)
 
 
-class ItemDeleteView(LoginRequiredMixin, DeleteView):
+class BookDeleteView(LoginRequiredMixin, DeleteView):
     """
     ビュー：削除画面
     """
-    model = Item
+    model = Book
     success_url = reverse_lazy('index')
 
     def delete(self, request, *args, **kwargs):
         """
         削除処理
         """
-        item = self.get_object()
-        item.delete()
+        book = self.get_object()
+        book.delete()
 
         return HttpResponseRedirect(self.success_url)

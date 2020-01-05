@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Item
+from .models import Book
 
 
-@admin.register(Item)
-class ItemAdmin(admin.ModelAdmin):
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
     """
     管理画面上の動作の設定
       項目の表示非表示や検索項目の指定が可能
